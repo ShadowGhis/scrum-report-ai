@@ -1,5 +1,6 @@
-<div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-    {{-- CARD 1: Utenti attivi non admin --}}
+<div class="flex justify-center p-6">
+<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        {{-- CARD 1: Utenti attivi non admin --}}
     <x-mary-card title="Utenti attivi">
         <div class="text-4xl font-bold text-primary">{{ $activeUsersCount }}</div>
         <div class="text-sm text-gray-500 dark:text-gray-400 mt-2">
@@ -18,13 +19,9 @@
     {{-- CARD 3: Report generati --}}
     <x-mary-card title="Report AI">
         <div class="flex items-center gap-6">
-            <div>
-                <div class="text-success text-3xl font-bold">{{ $reportsSuccess }}</div>
-                <div class="text-sm text-gray-500 dark:text-gray-400">Completati</div>
-            </div>
-            <div>
-                <div class="text-error text-3xl font-bold">{{ $reportsFailed }}</div>
-                <div class="text-sm text-gray-500 dark:text-gray-400">Falliti</div>
+            <divp>
+                <div class="text-success text-3xl font-bold">{{ $reportsSuccess }} / {{ $reportsFailed }}</div>
+                <div class="text-sm text-gray-500 dark:text-gray-400">Completati / Falliti</div>
             </div>
         </div>
     </x-mary-card>
