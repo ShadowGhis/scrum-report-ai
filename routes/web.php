@@ -10,7 +10,7 @@ use Illuminate\Support\Facades\Route;
 
 
 
-    Route::get('/dashboard', [DashboardController::class, 'index'])
+    Route::view('/dashboard', 'dashboard')
         ->middleware(['auth', 'verified'])
         ->name('dashboard');
 
