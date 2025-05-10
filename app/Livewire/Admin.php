@@ -1,18 +1,15 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Livewire;
 
-use App\Models\Project;
-use App\Models\Report;
 use App\Models\User;
-use Illuminate\Http\Request;
+use Livewire\Component;
 
-class DashboardController extends Controller
+class Admin extends Component
 {
-    public function index()
+    public function render()
     {
-        // Utenti non admin
-        $users = User::get();
+        $users = User::role('admin')->get();
 
         $headers = [
             ['key' => 'id', 'label' => '#'],
@@ -27,7 +24,7 @@ class DashboardController extends Controller
         $reportsSuccess = \App\Models\Report::where('generation_status', 'success')->count();
         $reportsFailed = \App\Models\Report::where('generation_status', 'failed')->count();
 
-        return view('dashboard', compact(
+        return view('livewire.admin', compact(
             'users',
             'headers',
             'activeUsersCount',
@@ -35,7 +32,5 @@ class DashboardController extends Controller
             'reportsSuccess',
             'reportsFailed'
         ));
-
     }
-
 }

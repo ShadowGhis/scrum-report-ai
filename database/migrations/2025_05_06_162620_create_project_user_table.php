@@ -14,6 +14,8 @@ return new class extends Migration
         Schema::create('project_user', function (Blueprint $table) {
             $table->id();
             $table->timestamps();
+            $table->softDeletes();
+
         });
     }
 

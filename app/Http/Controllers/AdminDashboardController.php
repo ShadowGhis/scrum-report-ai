@@ -2,17 +2,15 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Project;
-use App\Models\Report;
 use App\Models\User;
 use Illuminate\Http\Request;
 
-class DashboardController extends Controller
+class AdminDashboardController extends Controller
 {
     public function index()
     {
         // Utenti non admin
-        $users = User::get();
+        $users = User::where('active', 1)->get();
 
         $headers = [
             ['key' => 'id', 'label' => '#'],
@@ -35,7 +33,5 @@ class DashboardController extends Controller
             'reportsSuccess',
             'reportsFailed'
         ));
-
     }
-
 }
