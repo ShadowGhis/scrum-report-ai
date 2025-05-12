@@ -8,6 +8,6 @@ class Manager extends Component
 {
     public function render()
     {
-        return view('livewire.manager');
+        return view('livewire.layout.manager');
     }
 }

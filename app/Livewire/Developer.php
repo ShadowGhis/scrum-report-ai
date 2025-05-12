@@ -8,6 +8,6 @@ class Developer extends Component
 {
     public function render()
     {
-        return view('livewire.developer');
+        return view('livewire.layout.developer');
     }
 }

@@ -10,11 +10,11 @@
             <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">
                 <div class="p-6 text-gray-900 dark:text-gray-100">
                     @role('admin')
-                    <livewire:admin />
+                    <livewire:layout.admin />
                 @elserole('manager')
-                    <livewire:manager />
+                    <livewire:layout.manager />
                 @elserole('developer')
-                    <livewire:developer />
+                    <livewire:layout.developer />
                 @else
                     <div class="p-6 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100">
                         {{ __("Ruolo non riconosciuto.") }}

@@ -1,4 +1,5 @@
 <div>
+    <x-mary-header title="Situazione Attuale" separator />
     <div class="flex justify-center p-6">
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
             {{-- CARD 1: Utenti attivi non admin --}}
@@ -30,12 +31,11 @@
     </div>
 
     <div class="mt-10">
+        <x-mary-header title="Utenti registrati" separator />
+        
         <div class="flex justify-end mb-4">
             <x-mary-button label="Aggiungi utente" @click="$wire.myModal2 = true" class="btn-primary" />
         </div>
-        
-        <x-mary-header title="Utenti registrati" separator />
-        
     <x-mary-table :headers="$headers" :rows="$users">
          @scope('actions', $user)
              @if ($user->trashed())

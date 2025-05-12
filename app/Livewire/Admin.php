@@ -39,7 +39,7 @@ class Admin extends Component
         $reportsSuccess = \App\Models\Report::where('generation_status', 'success')->count();
         $reportsFailed = \App\Models\Report::where('generation_status', 'failed')->count();
 
-        return view('livewire.admin', compact(
+        return view('livewire.layout.admin', compact(
             'users',
             'headers',
             'activeUsersCount',
