@@ -22,11 +22,10 @@ class Admin extends Component
     public function render()
     {
         $users = User::withTrashed()
-        ->whereHas('roles', fn ($q) => $q->whereIn('name', ['admin', 'manager', 'developer']))
-        ->with('roles')
-        ->get();
+            ->with('roles')
+            ->get();
         
-        $headers = [
+        $userHeaders = [
             ['key' => 'id', 'label' => '#'],
             ['key' => 'name', 'label' => 'Nome'],
             ['key' => 'email', 'label' => 'Email'],
@@ -41,11 +40,11 @@ class Admin extends Component
 
         return view('livewire.layout.admin', compact(
             'users',
-            'headers',
+            'userHeaders',
             'activeUsersCount',
             'projectsCount',
             'reportsSuccess',
-            'reportsFailed'
+            'reportsFailed',
         ));
     }
 

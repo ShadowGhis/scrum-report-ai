@@ -17,6 +17,7 @@ class Project extends Model
         'access_token',
         'visibility',   
         'created_by',
+        'manager_id'
     ];
     
     public function create_by()
@@ -24,9 +25,14 @@ class Project extends Model
         return $this->belongsTo(User::class, 'created_by');
     }
 
-    public function users()
+    public function manager()
     {
-        return $this->belongsToMany(User::class)->withPivot('role')->withTimestamps();
+        return $this->belongsTo(User::class, 'manager_id');
+    }   
+
+    public function developers()
+    {
+        return $this->belongsToMany(User::class, 'developer_project', 'project_id', 'developer_id');
     }
 
     public function gitlabUsers()

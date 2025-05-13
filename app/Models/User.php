@@ -47,13 +47,16 @@ class User extends Authenticatable
         ];
     }
 
-    public function projects()
+   public function managedProjects()
     {
-        return $this->belongsToMany(Project::class)
-                ->withPivot('role')
-                ->withTimestamps()
-                ->withTrashed(); // se vuoi anche i soft-deleted
+        return $this->hasMany(Project::class, 'manager_id');
     }
+
+        public function developerProjects()
+    {
+        return $this->belongsToMany(Project::class, 'developer_project', 'developer_id', 'project_id');
+    }
+
 
     public function auditLogs()
     {
