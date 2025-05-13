@@ -56,8 +56,8 @@
     <x-mary-modal wire:model="confirmingAction" title="Conferma azione">
         <x-slot name="subtitle">
         {!! $actionType === 'delete'
-            ? 'Sei sicuro di voler disattivare questo utente?'
-            : 'Vuoi davvero riattivare questo utente?' !!}
+            ? 'Sei sicuro di voler disattivare questo Progetto?'
+            : 'Vuoi davvero riattivare questo Progetto?' !!}
         </x-slot>
 
         <x-slot:actions>
