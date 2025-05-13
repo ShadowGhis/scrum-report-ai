@@ -1,5 +1,4 @@
 <div>
-
     <x-mary-header title="Progetti registrati" separator />
         
         <div class="flex justify-end mb-4">
@@ -19,6 +18,10 @@
     @endscope
 
 
+    @scope('cell_created_by', $project)
+        <x-mary-badge :value="$project->create_by->name" class="badge-soft" />    
+    @endscope
+
     {{-- Colonna azioni --}}
     @scope('actions', $project)
         <div class="flex items-center gap-2">
@@ -36,7 +39,16 @@
                     data-tip="Elimina progetto"
                     wire:click="confirmAction({{ $project->id }}, 'delete')"
                 />
+               <x-mary-button 
+                    icon="o-pencil"
+                    class="btn-info tooltip"
+                    data-tip="Modifica progetto"
+                    wire:click="editProject({{ $project->id }})"
+                />
             @endif
+        </div>
+        <div class="flex items-center gap-2">
+            
         </div>
     @endscope
     </x-mary-table>
@@ -59,8 +71,8 @@
     </x-mary-modal>
     
     
-    <x-mary-modal wire:model="projectCreate" title="Nuovo utente" subtitle="Compila i dati per creare un progetto">
-        <x-mary-form wire:submit.prevent="createProject">
+    <x-mary-modal wire:model="projectCreate" :title="$editing ? 'Modifica progetto' : 'Nuovo progetto'" subtitle="Compila i dati per il progetto">
+    <x-mary-form wire:submit.prevent="{{ $editing ? 'updateProject' : 'createProject' }}">
             <x-mary-input label="Nome" wire:model.defer="name" />
             <x-mary-input label="GitLab Project ID" wire:model.defer="gitlab_project_id" />
             <x-mary-input label="GitLab URL" wire:model.defer="gitlab_url" />
@@ -85,7 +97,11 @@
     
             <x-slot:actions>
                 <x-mary-button label="Annulla" @click="$wire.projectCreate = false" />
-                <x-mary-button label="Conferma" class="btn-primary" type="submit" />
+                <x-mary-button 
+                    :label="$editing ? 'Aggiorna' : 'Conferma'" 
+                    class="btn-primary" 
+                    type="submit" 
+                />
             </x-slot:actions>
         </x-mary-form>
 

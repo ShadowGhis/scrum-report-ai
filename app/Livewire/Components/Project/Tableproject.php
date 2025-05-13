@@ -10,8 +10,6 @@ use Livewire\Component;
 
 class Tableproject extends Component
 {
-
-   
     public bool $projectCreate = false;
 
     public string $name = '';
@@ -25,6 +23,9 @@ class Tableproject extends Component
     public ?int $projectSelectedId = null;
     public string $actionType = '';
 
+    public bool $editing = false;
+    public ?int $editingProjectId = null;
+
     public function render()
     {
         $projectHeaders = [
@@ -34,7 +35,7 @@ class Tableproject extends Component
             ['key' => 'gitlab_url', 'label' => 'Url'],
             ['key' => 'manager', 'label' => 'Manager'],
             ['key' => 'developers', 'label' => 'Sviluppatori'],
-            ['key' => 'created_by.name', 'label' => 'Creato da'],
+            ['key' => 'created_by', 'label' => 'Creato da'],
             ['key' => 'created_at', 'label' => 'Creato il'],
         ];
 
@@ -55,11 +56,34 @@ class Tableproject extends Component
             'managers'
         ));
     }
-    public function createProject()
+
+    //Eliminazione ripristino
+    public function performAction()
     {
-        
-        logger($this->developers);
-        
+        $project = \App\Models\Project::withTrashed()->findOrFail($this->projectSelectedId);
+
+        if ($this->actionType === 'delete') {
+            $project->delete();
+        }
+
+        if ($this->actionType === 'restore') {
+            $project->restore();
+        }
+
+        $this->reset(['confirmingAction', 'projectSelectedId', 'actionType']);
+    }
+
+    public function confirmAction($id, $type)
+    {
+        $this->projectSelectedId = $id;
+        $this->actionType = $type; 
+        $this->confirmingAction = true;
+    }
+
+
+    //Creazione progetto
+    public function createProject()
+    {        
         $this->validate([
         'name'              => 'required|string|max:255',
         'gitlab_project_id' => [
@@ -97,25 +121,61 @@ class Tableproject extends Component
     }
 
 
-    public function performAction()
+    //modifica progetto
+    public function editProject(int $projectId)
     {
-        $project = \App\Models\Project::withTrashed()->findOrFail($this->projectSelectedId);
+        $project = \App\Models\Project::with('developers')->findOrFail($projectId);
 
-        if ($this->actionType === 'delete') {
-            $project->delete();
-        }
+        $this->editing = true;
+        $this->editingProjectId = $project->id;
 
-        if ($this->actionType === 'restore') {
-            $project->restore();
-        }
+        $this->name = $project->name;
+        $this->gitlab_project_id = $project->gitlab_project_id;
+        $this->gitlab_url = $project->gitlab_url;
+        $this->manager = $project->manager_id;
+        $this->developers = $project->developers->pluck('id')->toArray();
 
-        $this->reset(['confirmingAction', 'projectSelectedId', 'actionType']);
+        $this->projectCreate = true;
     }
 
-    public function confirmAction($id, $type)
+    public function updateProject()
     {
-        $this->projectSelectedId = $id;
-        $this->actionType = $type; 
-        $this->confirmingAction = true;
+        $this->validate([
+            'name'              => 'required|string|max:255',
+            'gitlab_project_id' => [
+                'required',
+                'int',
+                Rule::unique('projects', 'gitlab_project_id')->ignore($this->editingProjectId)->whereNull('deleted_at'),
+            ],
+            'gitlab_url'        => 'required|string',
+            'manager'           => 'required|exists:users,id',
+            'developers'        => 'nullable|array',
+            'developers.*'      => 'required_with:developers|exists:users,id',
+        ]);
+
+        $project = \App\Models\Project::findOrFail($this->editingProjectId);
+
+        $project->update([
+            'name'              => $this->name,
+            'gitlab_project_id' => $this->gitlab_project_id,
+            'gitlab_url'        => $this->gitlab_url,
+            'manager_id'        => $this->manager,
+        ]);
+
+        $project->developers()->sync(array_filter($this->developers));
+
+        $this->reset([
+            'editing',
+            'editingProjectId',
+            'name',
+            'gitlab_project_id',
+            'gitlab_url',
+            'manager',
+            'developers',
+            'projectCreate',
+        ]);
+
+        $this->dispatch('$refresh');
     }
+
 }
